@@ -1,12 +1,12 @@
 const  val TIME_ONLINE = 86_500
 const val MINUTES = TIME_ONLINE / 60
 const val HOURS = TIME_ONLINE / 3600
-const val hourEnding1 = "час"
-const val hourEnding2 = "часа"
-const val hourEnding3 = "часов"
-const val minuteEnding1 = "минуту"
-const val minuteEnding2 = "минуты"
-const val minuteEnding3 = "минут"
+const val HOUR_ENDING1 = "час"
+const val HOUR_ENDING2 = "часа"
+const val HOUR_ENDING3 = "часов"
+const val MINUTE_ENDING1 = "минуту"
+const val MINUTE_ENDING2 = "минуты"
+const val MINUTE_ENDING3 = "минут"
 
 fun main() {
     agoToText(TIME_ONLINE)
@@ -28,13 +28,13 @@ fun agoToText (TIME_ONLINE : Int) {
 }
 
 val timeMinute = when {
-     ((MINUTES % 10 == 1) && (MINUTES % 10 != 11)) -> minuteEnding1
-     ((MINUTES % 10 == 2) || (MINUTES % 10 == 3) || (MINUTES % 10 == 4)) -> minuteEnding2
-     else -> minuteEnding3
+     ((MINUTES % 10 == 1) && (MINUTES % 10 != 11)) -> MINUTE_ENDING1
+     ((MINUTES % 10 == 2) || (MINUTES % 10 == 3) || (MINUTES % 10 == 4)) -> MINUTE_ENDING2
+     else -> MINUTE_ENDING3
 }
 
 val timeHour = when {
-    ((HOURS % 10 == 1) && (HOURS % 10 != 11)) -> hourEnding1
-    ((HOURS % 10 == 2) || (HOURS % 10 == 3) || (HOURS % 10 == 4)) -> hourEnding2
-    else -> hourEnding3
+    ((HOURS % 10 == 1) && (HOURS % 10 != 11)) -> HOUR_ENDING1
+    ((HOURS % 10 == 2) || (HOURS % 10 == 3) || (HOURS % 10 == 4)) -> HOUR_ENDING2
+    else -> HOUR_ENDING3
 }
