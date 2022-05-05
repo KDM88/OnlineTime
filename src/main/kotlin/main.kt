@@ -4,38 +4,46 @@ const val HOUR_ENDING3 = "часов"
 const val MINUTE_ENDING1 = "минуту"
 const val MINUTE_ENDING2 = "минуты"
 const val MINUTE_ENDING3 = "минут"
+const val MINUTE = 60
+const val HOUR = 60 * MINUTE
+const val DAY = 24 * HOUR
 
 fun main() {
-    agoToText(timeOnline, minutes, hours)
+    val timeOnline = 16_500
+    val minutes = timeOnline / MINUTE
+    val hours = timeOnline / HOUR
+    agoToText(timeOnline, minutes, hours, MINUTE, HOUR, DAY)
 }
 
-val timeOnline = 1_500
-val minutes = timeOnline / 60
-val hours = timeOnline / 3600
-
-fun agoToText(timeOnline: Int, minutes: Int, hours: Int) {
-    when (timeOnline) {
+fun agoToText(timeOnline: Int, minutes: Int, hours: Int, MINUTE: Int, HOUR: Int, DAY: Int) {
+    return when (timeOnline) {
         in 0..60 -> println("был(а) только что")
-        in 61..3_600 -> {
+        in MINUTE + 1..HOUR -> {
+            val timeMinute = time(minutes, hours, timeOnline, MINUTE, HOUR, DAY)
             println("был(а) $minutes $timeMinute назад ")
         }
-        in 3_601..86_400 -> {
+        in HOUR + 1..DAY -> {
+            val timeHour = time(minutes, hours, timeOnline, MINUTE, HOUR, DAY)
             println("был(а) $hours $timeHour назад")
         }
-        in 86_400..172_800 -> println("был(а) сегодня")
-        in 172_801..259_200 -> println("был(а) вчера")
+        in DAY + 1..DAY * 2 -> println("был(а) сегодня")
+        in DAY * 2 + 1..DAY * 3 -> println("был(а) вчера")
         else -> println("был(а) давно")
     }
 }
 
-val timeMinute = when {
-    ((minutes % 10 == 1) && (minutes % 10 != 11)) -> MINUTE_ENDING1
-    ((minutes % 10 == 2) || (minutes % 10 == 3) || (minutes % 10 == 4)) -> MINUTE_ENDING2
-    else -> MINUTE_ENDING3
-}
-
-val timeHour = when {
-    ((hours % 10 == 1) && (hours % 10 != 11)) -> HOUR_ENDING1
-    ((hours % 10 == 2) || (hours % 10 == 3) || (hours % 10 == 4)) -> HOUR_ENDING2
-    else -> HOUR_ENDING3
+fun time(minutes: Int, hours: Int, timeOnline: Int, MINUTE: Int, HOUR: Int, DAY: Int): String {
+    val timeResult = when (timeOnline) {
+        in MINUTE + 1..HOUR -> minutes
+        in HOUR + 1..DAY -> hours
+        else -> error("ошибка")
+    }
+    return when {
+        ((timeResult % 10 == 1) && (timeResult % 10 != 11)) ->
+            if (timeResult == minutes) MINUTE_ENDING1 else HOUR_ENDING1
+        ((timeResult % 10 in 2..4) && (timeResult !in 12..14)) ->
+            if (timeResult == minutes) MINUTE_ENDING2 else HOUR_ENDING2
+        else ->
+            if (timeResult == minutes) MINUTE_ENDING3 else HOUR_ENDING3
+    }
 }
