@@ -9,41 +9,34 @@ const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
 fun main() {
-    val timeOnline = 16_500
-    val minutes = timeOnline / MINUTE
-    val hours = timeOnline / HOUR
-    agoToText(timeOnline, minutes, hours, MINUTE, HOUR, DAY)
+    val timeOnline = 15_000
+    val result = agoToText(timeOnline)
+    println("был(а) в сети $result")
 }
 
-fun agoToText(timeOnline: Int, minutes: Int, hours: Int, MINUTE: Int, HOUR: Int, DAY: Int) {
+fun agoToText(timeOnline: Int): String {
     return when (timeOnline) {
-        in 0..60 -> println("был(а) только что")
+        in 0..MINUTE -> "только что"
         in MINUTE + 1..HOUR -> {
-            val timeMinute = time(minutes, hours, timeOnline, MINUTE, HOUR, DAY)
-            println("был(а) $minutes $timeMinute назад ")
+            val minutes = timeOnline / MINUTE
+            val timeMinute = time(minutes, MINUTE_ENDING1, MINUTE_ENDING2, MINUTE_ENDING3)
+            "$minutes $timeMinute назад"
         }
         in HOUR + 1..DAY -> {
-            val timeHour = time(minutes, hours, timeOnline, MINUTE, HOUR, DAY)
-            println("был(а) $hours $timeHour назад")
+            val hours = timeOnline / HOUR
+            val timeHour = time(hours, HOUR_ENDING1, HOUR_ENDING2, HOUR_ENDING3)
+            "$hours $timeHour назад"
         }
-        in DAY + 1..DAY * 2 -> println("был(а) сегодня")
-        in DAY * 2 + 1..DAY * 3 -> println("был(а) вчера")
-        else -> println("был(а) давно")
+        in DAY + 1..DAY * 2 -> "сегодня"
+        in DAY * 2 + 1..DAY * 3 -> "вчера"
+        else -> "давно"
     }
 }
 
-fun time(minutes: Int, hours: Int, timeOnline: Int, MINUTE: Int, HOUR: Int, DAY: Int): String {
-    val timeResult = when (timeOnline) {
-        in MINUTE + 1..HOUR -> minutes
-        in HOUR + 1..DAY -> hours
-        else -> error("ошибка")
-    }
+fun time(timeResult: Int, ending1: String, ending2: String, ending3: String): String {
     return when {
-        ((timeResult % 10 == 1) && (timeResult % 10 != 11)) ->
-            if (timeResult == minutes) MINUTE_ENDING1 else HOUR_ENDING1
-        ((timeResult % 10 in 2..4) && (timeResult !in 12..14)) ->
-            if (timeResult == minutes) MINUTE_ENDING2 else HOUR_ENDING2
-        else ->
-            if (timeResult == minutes) MINUTE_ENDING3 else HOUR_ENDING3
+        ((timeResult % 10 == 1) && (timeResult % 10 != 11)) -> ending1
+        ((timeResult % 10 in 2..4) && (timeResult !in 12..14)) -> ending2
+        else -> ending3
     }
 }
